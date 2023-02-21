@@ -1,0 +1,15 @@
+{
+  "name": "nostr-publisher",
+  "version": "0.0.0",
+  "devDependencies": {
+    "wrangler": "2.10.0"
+  },
+  "private": true,
+  "scripts": {
+    "start": "wrangler dev",
+    "deploy": "wrangler publish"
+  },
+  "dependencies": {
+    "nostr": "^0.2.7"
+  }
+}

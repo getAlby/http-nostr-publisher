@@ -1,0 +1,4 @@
+name = "nostr-publisher"
+main = "src/index.js"
+compatibility_date = "2023-02-21"
+node_compat = true
