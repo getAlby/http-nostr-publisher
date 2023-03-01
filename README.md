@@ -38,3 +38,10 @@ Refer to the [Cloudflare docs](https://developers.cloudflare.com/workers/get-sta
 $ wrangler publish
 ```
 
+## Development
+
+```
+$ wrangler dev
+```
+
+
