@@ -13,16 +13,10 @@ export default {
       return new Response('Sooner and later you will see great changes made.', { status: 404 });
     }
 
-    if (pathname === "/") {
-      const status = await publishEvent(request, env, ctx);
-      return new Response(status)
+    if (pathname === "/publish") {
+      return await publishEvent(request, env, ctx);
     } else if (pathname === "/profile") {
-      const result = await getProfile(request, env, ctx);
-      return new Response(JSON.stringify(result), {
-        headers: {
-          'content-type': 'application/json;charset=UTF-8',
-        },
-      });
+      return await getProfile(request, env, ctx);
     } else {
       return new Response('Endpoint does not exist', { status: 404 });
     }

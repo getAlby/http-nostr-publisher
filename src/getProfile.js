@@ -18,23 +18,20 @@ export const getProfile = async (request, env, ctx) => {
   })
   const getCache = key => env.PROFILES.getWithMetadata(key)
 
-  let data;
-  const { value, metadata } = await getCache(pubkey)
-  if (value) {
-    data = JSON.parse(value)
-    // return if the data is NOT older than 3 hours
-    if (metadata.createdAt + 3 * HOUR * 1000 > Date.now()) {
-      return data;
-    }
-  }   
-
-  const result = await Promise.any(fetchProfiles(pubkey,relayUrls));
-
-  const kvUpdatePromise = async (res) => {
-    await setCache(pubkey, JSON.stringify(res))
+  const fetchAndCache = async (pubkey) => {
+    const result = await Promise.any(fetchProfiles(pubkey,relayUrls));
+    return await setCache(pubkey, JSON.stringify(result));
   }
-  // updates env.PROFILES with new info after sending the response
-  ctx.waitUntil(kvUpdatePromise(result));
+  
+  const { value, metadata } = await getCache(pubkey);
+  
+  if (!metadata || metadata.createdAt + 3 * HOUR * 1000 > Date.now()) {
+    ctx.waitUntil(fetchAndCache(pubkey, relayUrls));
+  }
 
-  return result;
+  return new Response(value, { 
+    headers: {
+      'content-type': 'application/json;charset=UTF-8',
+    }
+  });
 }

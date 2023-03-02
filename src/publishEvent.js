@@ -45,5 +45,5 @@ export const publishEvent = async (request, env, ctx) => {
 
   ctx.waitUntil(Promise.all(promises));
 
-  return "OK";
+  return new Response('OK');
 }
