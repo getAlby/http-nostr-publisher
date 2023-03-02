@@ -1,11 +1,11 @@
-import { fetchProfiles } from './utils';
+import { fetchProfiles, normalizeToHex } from './utils';
 
 const HOUR = 60 * 60
 
 export const getProfile = async (request, env, ctx) => {
   const body = await request.json();
   const relayUrls = body.relays.map(url => (new URL(url)).origin);
-  const pubkey = body.pubkey;
+  const pubkey = normalizeToHex(body.pubkey);
 
   if (!relayUrls || !pubkey) {
     return new Response('INVALID_REQUEST', { status: 422 });

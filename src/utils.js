@@ -1,4 +1,5 @@
 import { Relay } from 'nostr';
+import { bech32 } from "bech32";
 
 export const fetchProfiles = (pubkey, urls) => urls.map(url => new Promise((resolve, reject) => {
   console.info(`Fetching ${pubkey}'s info from ${url}`);
@@ -33,3 +34,23 @@ export const fetchProfiles = (pubkey, urls) => urls.map(url => new Promise((reso
     resolve(ev);
   });
 }));
+
+const bech32Decode = (str, encoding = "utf-8") => {
+  const { words: dataPart } = bech32.decode(str, 2000);
+  const requestByteArray = bech32.fromWords(dataPart);
+  return Buffer.from(requestByteArray).toString(encoding);
+}
+
+export const normalizeToHex = (str) => {
+  const NIP19Prefixes = ["npub", "nsec", "note"];
+  const prefix = str.substring(0, 4);
+  if (NIP19Prefixes.includes(prefix)) {
+    try {
+      const hexStr = bech32Decode(str, "hex");
+      return hexStr;
+    } catch (e) {
+      console.info("ignoring bech32 parsing error", e);
+    }
+  }
+  return str;
+}
