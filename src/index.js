@@ -13,7 +13,7 @@ export default {
       return new Response('Sooner and later you will see great changes made.', { status: 404 });
     }
 
-    if (pathname === "/publish") {
+    if (pathname === "/" || pathname === "/publish") {
       return await publishEvent(request, env, ctx);
     } else if (pathname === "/profile") {
       return await getProfile(request, env, ctx);
