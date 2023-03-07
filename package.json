@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "bech32": "^2.0.0",
-    "nostr": "^0.2.7"
+    "nostr": "^0.2.7",
+    "nostr-tools": "^1.7.4"
   }
 }

@@ -1,4 +1,4 @@
-import { Relay } from 'nostr';
+import { relayInit } from 'nostr-tools';
 
 export const publishEvent = async (request, env, ctx) => {
   const body = await request.json();
@@ -11,10 +11,8 @@ export const publishEvent = async (request, env, ctx) => {
   console.info(`Processing ${event.id}`);
 
   const promises = relayUrls.map(url => new Promise((resolve, reject) => {
-    console.info(`Publishing ${event.id} to ${url}`);
-
-    const relay = Relay(url);
-    const timeout = 3500;
+    const relay = relayInit(url);
+    const timeout = 5000;
 
     function timeoutAndClose() {
       console.error(`Timeout error: event ${event.id} relay ${url}`);
@@ -23,9 +21,22 @@ export const publishEvent = async (request, env, ctx) => {
     }
     let timeoutCheck = setTimeout(timeoutAndClose, timeout);
 
-    relay.on('open', () => {
-      console.info(`Sending ${event.id}`);
-      relay.send(['EVENT', event]);
+    relay.on('connect', () => {
+      console.info(`Sending ${event.id} to ${url}`);
+      const pub = relay.publish(event);
+      console.info('published');
+      pub.on('ok', () => {
+        console.info(`Event ${event.id} published to ${url}`);
+        relay.close();
+        clearTimeout(timeoutCheck);
+        resolve();
+      });
+      pub.on('failed', (reason) => {
+        console.warn(`Failed to publish ${event.id} to ${url}: ${reason}`)
+        relay.close();
+        clearTimeout(timeoutCheck);
+        resolve();
+      })
     });
 
     relay.on('error', (msg) => {
@@ -35,12 +46,7 @@ export const publishEvent = async (request, env, ctx) => {
       resolve();
     });
 
-    relay.on('ok', () => {
-      console.info(`Event ${event.id} published to ${url}`);
-      clearTimeout(timeoutCheck);
-      relay.close();
-      resolve()
-    });
+    return relay.connect();
   }));
 
   ctx.waitUntil(Promise.all(promises));
