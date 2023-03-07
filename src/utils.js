@@ -20,6 +20,7 @@ export const fetchProfiles = (pubkey, urls) => urls.map(url => new Promise(async
     subscription.on('event', (ev) => {
       console.info(`Fetched ${pubkey}'s info from ${url}`);
       clearTimeout(timeoutCheck);
+      subscription.unsub();
       relay.close();
       resolve(ev);
     });

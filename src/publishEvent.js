@@ -24,7 +24,6 @@ export const publishEvent = async (request, env, ctx) => {
     relay.on('connect', () => {
       console.info(`Sending ${event.id} to ${url}`);
       const pub = relay.publish(event);
-      console.info('published');
       pub.on('ok', () => {
         console.info(`Event ${event.id} published to ${url}`);
         relay.close();
