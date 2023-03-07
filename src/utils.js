@@ -1,11 +1,11 @@
-import { Relay } from 'nostr';
+import { relayInit } from 'nostr-tools';
 import { bech32 } from "bech32";
 
-export const fetchProfiles = (pubkey, urls) => urls.map(url => new Promise((resolve, reject) => {
+export const fetchProfiles = (pubkey, urls) => urls.map(url => new Promise(async (resolve, reject) => {
   console.info(`Fetching ${pubkey}'s info from ${url}`);
 
-  const relay = Relay(url);
-  const timeout = 3500;
+  const relay = relayInit(url);
+  const timeout = 5000;
 
   function timeoutAndClose() {
     console.error(`Timeout error: pubkey ${pubkey} relay ${url}`);
@@ -14,10 +14,15 @@ export const fetchProfiles = (pubkey, urls) => urls.map(url => new Promise((reso
   }
   let timeoutCheck = setTimeout(timeoutAndClose, timeout);
 
-  relay.on('open', async () => {
-    console.info(`Fetching ${pubkey}'s info...`);
-    // TODO: Add support for npub
-    relay.subscribe(crypto.randomUUID(), {limit: 1, kinds:[0], authors: [pubkey]});
+  relay.on('connect', () => {
+    console.info(`connected to ${url}`);
+    const subscription = relay.sub([{ limit: 1, kinds: [0], authors: [pubkey] }]);
+    subscription.on('event', (ev) => {
+      console.info(`Fetched ${pubkey}'s info from ${url}`);
+      clearTimeout(timeoutCheck);
+      relay.close();
+      resolve(ev);
+    });
   });
 
   relay.on('error', (msg) => {
@@ -27,12 +32,7 @@ export const fetchProfiles = (pubkey, urls) => urls.map(url => new Promise((reso
     resolve();
   });
 
-  relay.on('event', (sub_id, ev) => {
-    console.info(`Fetched ${pubkey}'s info from ${url}`);
-    clearTimeout(timeoutCheck);
-    relay.close();
-    resolve(ev);
-  });
+  relay.connect();
 }));
 
 const bech32Decode = (str, encoding = "utf-8") => {

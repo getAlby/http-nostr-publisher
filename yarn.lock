@@ -641,11 +641,6 @@ nanoid@^3.3.3:
   resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.3.4.tgz#730b67e3cd09e2deacf03c027c81c9d9dbc5e8ab"
   integrity sha512-MqBkQh/OHTS2egovRtLk45wEyNXwF+cokD+1YPf9u5VfJiRdAiRwB2froX5Co9Rh20xs4siNPm8naNotSD6RBw==
 
-noble-secp256k1@^1.2.14:
-  version "1.2.14"
-  resolved "https://registry.yarnpkg.com/noble-secp256k1/-/noble-secp256k1-1.2.14.tgz#39429c941d51211ca40161569cee03e61d72599e"
-  integrity sha512-GSCXyoZBUaaPwVWdYncMEmzlSUjF9J/YeEHpklYJCyg8wPuJP3NzDx0BkiwArzINkdX2HJHvUJhL6vVWPOQQcg==
-
 node-forge@^1:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/node-forge/-/node-forge-1.3.1.tgz#be8da2af243b2417d5f646a770663a92b7e9ded3"
@@ -667,14 +662,6 @@ nostr-tools@^1.7.4:
     "@scure/bip32" "^1.1.5"
     "@scure/bip39" "^1.1.1"
     prettier "^2.8.4"
-
-nostr@^0.2.7:
-  version "0.2.8"
-  resolved "https://registry.yarnpkg.com/nostr/-/nostr-0.2.8.tgz#f22dc2749dcee76babeea44442ed362380f9f44b"
-  integrity sha512-p25OQiEB5x8rWWoWLRRbxtxQiaQgypaQQakSKw5+cp/SW0DXea/soMzqmTXei1I6HrcARuyfvedGTdoEU471Ow==
-  dependencies:
-    noble-secp256k1 "^1.2.14"
-    ws "^8.8.1"
 
 npm-run-path@^5.1.0:
   version "5.1.0"
@@ -895,7 +882,7 @@ wrangler@2.10.0:
   optionalDependencies:
     fsevents "~2.3.2"
 
-ws@^8.2.2, ws@^8.8.1:
+ws@^8.2.2:
   version "8.12.1"
   resolved "https://registry.yarnpkg.com/ws/-/ws-8.12.1.tgz#c51e583d79140b5e42e39be48c934131942d4a8f"
   integrity sha512-1qo+M9Ba+xNhPB+YTWUlK6M17brTut5EXbcBaMRN5pH5dFrXz7lzz1ChFSUq3bOUl8yEvSenhHmYUNJxFzdJew==
