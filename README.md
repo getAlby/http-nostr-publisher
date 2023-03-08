@@ -9,7 +9,7 @@ Using this worker applications do not need to integrate websockets and can publi
 
 ## API
 
-### POST /
+### POST /publish
 
 Send a JSON body with the the event and the relays that the event should be published to.
 
@@ -23,7 +23,40 @@ Send a JSON body with the the event and the relays that the event should be publ
 
 The HTTP request will immediatelly return and the the events are published asynchonously. 
 
+### POST /profile
+
+Retrieve the profile for a pubkey.
+
+```json
+{
+  "relays": ["relay.damus.io", "relay.snort.social"],
+  "pubkey": "profile-pubkey"
+}
+
+```
+
+If a profile is already cached it will return with `HTTP status 200`. 
+
+If a profile is NOT already cached it will return with `HTTP status 202` and query the profile asynchronously.
+
+
+
 ## Configuration
+
+#### Cloudflare KV
+
+The profile data is cached in a [worker KV](https://developers.cloudflare.com/workers/runtime-apis/kv/) (a global, low-latency, key-value data store). 
+
+Configure the KV:
+
+```
+$ wrangler kv:namespace create PROFILES
+$ wrangler kv:namespace create PROFILES --preview
+```
+
+and add the `kv_namespaces` array to the wrangler.toml
+
+#### API Token
 
 To protect your worker you can set a `API_TOKEN` environment variable.
 
