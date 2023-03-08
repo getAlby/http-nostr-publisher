@@ -1,6 +1,16 @@
 import { relayInit } from 'nostr-tools';
 import { bech32 } from "bech32";
 
+export const cleanURLs = (urls) => {
+  return urls.map(url => {
+    try {
+      return new URL(url).origin;
+    } catch (e) {
+      console.error(e);
+    }
+  }).filter(u => u); // filter falsy values;
+}
+
 export const fetchProfiles = (pubkey, urls) => urls.map(url => new Promise(async (resolve, reject) => {
   console.info(`Fetching ${pubkey}'s info from ${url}`);
 

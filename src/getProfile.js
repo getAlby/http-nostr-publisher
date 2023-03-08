@@ -1,10 +1,10 @@
-import { fetchProfiles, normalizeToHex } from './utils';
+import { fetchProfiles, normalizeToHex, cleanURLs } from './utils';
 
 const HOUR = 60 * 60
 
 export const getProfile = async (request, env, ctx) => {
   const body = await request.json();
-  const relayUrls = body.relays.map(url => (new URL(url)).origin);
+  const relayUrls = cleanURLs(body.relays);
   const pubkey = normalizeToHex(body.pubkey);
 
   if (!relayUrls || !pubkey) {

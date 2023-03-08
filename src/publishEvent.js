@@ -1,8 +1,9 @@
 import { relayInit } from 'nostr-tools';
+import { cleanURLs } from './utils';
 
 export const publishEvent = async (request, env, ctx) => {
   const body = await request.json();
-  const relayUrls = body.relays.map(url => (new URL(url)).origin);
+  const relayUrls = cleanURLs(body.relays);
   const event = body.event;
   if (!relayUrls || !event) {
     return new Response('INVALID_REQUEST', { status: 422 });
