@@ -20,7 +20,7 @@ export const fetchProfiles = (pubkey, urls) => urls.map(url => new Promise(async
   function timeoutAndClose() {
     console.error(`Timeout error: pubkey ${pubkey} relay ${url}`);
     relay.close();
-    resolve();
+    reject();
   }
   let timeoutCheck = setTimeout(timeoutAndClose, timeout);
 
@@ -40,7 +40,7 @@ export const fetchProfiles = (pubkey, urls) => urls.map(url => new Promise(async
     console.error(`Failed to fetch from ${url}`, JSON.stringify(msg));
     clearTimeout(timeoutCheck);
     relay.close();
-    resolve();
+    reject();
   });
 
   relay.connect();
