@@ -25,7 +25,7 @@ export const getProfile = async (request, env, ctx) => {
 
   const { value, metadata } = await getCache(pubkey);
 
-  if (!metadata || metadata.createdAt + 3 * HOUR * 1000 > Date.now()) {
+  if (!metadata || metadata.createdAt + 3 * HOUR * 1000 < Date.now()) {
     ctx.waitUntil(fetchAndCache(pubkey, relayUrls));
   }
 
